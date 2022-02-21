@@ -3,9 +3,10 @@ import time, sys, signal
 
 
 def clean_up(sig, frame):
+
     ifn.stop()
     gpio.cleanup()  # cleanup all GPIO
-    #sys.exit(0)
+
     print("Finished.")
 
 
@@ -55,6 +56,7 @@ class IffynetController():
 
     def stop(self):
         self.__clock.stop()
+        time.sleep(self.__clock.interval)
 
     @property
     def master(self):
@@ -67,6 +69,9 @@ class IffynetController():
         else:
             return None
 
+    @property
+    def clock_running(self):
+        return self.__clock.
 
 if __name__ == "__main__":
     # Check arguments and adjust RPi library
