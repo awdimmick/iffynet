@@ -5,7 +5,8 @@ import time, sys, signal
 def clean_up(sig, frame):
     ifn.stop()
     gpio.cleanup()  # cleanup all GPIO
-    sys.exit(0)
+    #sys.exit(0)
+    print("Finished.")
 
 
 class Clock(Thread):
