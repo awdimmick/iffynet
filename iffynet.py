@@ -99,7 +99,7 @@ class IffynetController():
 if __name__ == "__main__":
     # Check arguments and adjust RPi library
     clock_rate = 2
-    master = True
+    master = False
 
     if len(sys.argv) > 1:
 
@@ -110,11 +110,11 @@ if __name__ == "__main__":
         if "-master" in sys.argv:
             master = True
 
-        if "-pi" in sys.argv:
+        if "-dev" in sys.argv:
+            import GPIO as gpio
+        else:
             import RPi.GPIO as gpio
 
-    else:
-        import GPIO as gpio
 
     gpio.setmode(gpio.BCM)
     signal.signal(signal.SIGINT, clean_up)
