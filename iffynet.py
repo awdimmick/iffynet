@@ -60,7 +60,7 @@ class IffynetController():
         self.__master = master
         self.__clock = None
         self.__running = True
-        self.__last_clcok_high = 0
+        self.__last_clock_high = 0
 
         if master:
             # initialise clock
@@ -81,7 +81,10 @@ class IffynetController():
         self.__running = False
 
     def clock_respond(self):
-        clock_interval = time.time() - self.__last_clcok_high
+        now = time.time()
+        clock_interval = now - self.__last_clcok_high
+        self.__last_clock_high = now
+
         print (f"Clock {'HIGH' if gpio.input(IffynetController.CLOCK) else 'LOW'}. Time since last: {clock_interval}s. "
                f"Detected clock rate: {1/clock_interval}Hz")
 
