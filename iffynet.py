@@ -26,9 +26,9 @@ class Clock(Thread):
             while self.__running:
                 # Set clock pin low/high at regular interval
                 gpio.output(self.__clock_pin, gpio.HIGH)
-                time.sleep(1/self.__rate)
+                time.sleep(1/(self.__rate * 2))
                 gpio.output(self.__clock_pin, gpio.LOW)
-                time.sleep(1/self.__rate)
+                time.sleep(1/(self.__rate * 2))
 
         finally:
             pass
@@ -55,13 +55,13 @@ class IffynetController():
     USE_W = 22
 
     last_clock_high = 0
+    clock_interval = 0
 
     def __init__(self, master=False, clock_rate=2):
 
         self.__master = master
         self.__clock = None
         self.__running = True
-        self.__last_clock_high = 0
 
         if master:
             # initialise clock
@@ -82,12 +82,13 @@ class IffynetController():
 
     @staticmethod
     def clock_respond(channel):
-        now = time.time()
-        clock_interval = now - IffynetController.last_clock_high
-        IffynetController.last_clock_high = now
+        if gpio.input(IffynetController.CLOCK) == gpio.HIGH:
+            now = time.time()
+            IffynetController.clock_interval = now - IffynetController.last_clock_high
+            IffynetController.last_clock_high = now
 
-        print (f"Clock {'HIGH' if gpio.input(IffynetController.CLOCK) else 'LOW'}. Time since last: {clock_interval}s. "
-               f"Detected clock rate: {1/clock_interval}Hz")
+        print (f"Clock {'HIGH' if gpio.input(IffynetController.CLOCK) else 'LOW'}. Time since last HIGH: {IffynetController.clock_interval}s. "
+               f"Detected clock rate: {1/IffynetController.clock_interval}Hz")
 
 
     @property
