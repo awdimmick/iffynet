@@ -82,7 +82,7 @@ class IffynetController():
         self.__running = False
 
     @staticmethod
-    def clock_respond():
+    def clock_respond(channel):
         now = time.time()
         clock_interval = now - IffynetController.last_clock_high
         IffynetController.last_clock_high = now
