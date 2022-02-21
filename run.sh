@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python iffynet.py -pi
+python iffynet.py -pi -master

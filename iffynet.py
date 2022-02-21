@@ -56,12 +56,22 @@ class IffynetController():
 
 if __name__ == "__main__":
     # Check arguments and adjust RPi library
+    clock_rate = 2
+    master = False
+
     if len(sys.argv) > 1:
-        if sys.argv[1] == "-pi":
+        if "-pi" in sys.argv:
             import RPi.GPIO as gpio
-    else:
-        import GPIO as gpio
+        else:
+            import GPIO as gpio
+
+        if "-clock" in sys.argv:
+            i = sys.argv.index("-clock")
+            clock_rate = int(sys.argv[i + 1])
+
+        if "-master" in sys.argv:
+            master = True
 
     gpio.setmode(gpio.BCM)
 
-    ifn = IffynetController(master=True)
+    ifn = IffynetController(master=master, clock_rate=clock_rate)
