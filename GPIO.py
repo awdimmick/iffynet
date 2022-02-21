@@ -8,6 +8,7 @@ HIGH = 1
 LOW = 0
 RISING = 1
 FALLING = 0
+BOTH = 2
 
 def setmode(mode):
     if mode == BCM:
