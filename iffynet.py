@@ -2,7 +2,7 @@ from threading import Thread
 import time, sys, signal
 
 
-def clean_up():
+def clean_up(sig, frame):
     ifn.stop()
     gpio.cleanup()  # cleanup all GPIO
     sys.exit(0)
