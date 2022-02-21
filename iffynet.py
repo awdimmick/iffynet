@@ -82,13 +82,18 @@ class IffynetController():
 
     @staticmethod
     def clock_respond(channel):
-        if gpio.input(IffynetController.CLOCK) == gpio.HIGH:
-            now = time.time()
-            IffynetController.clock_interval = now - IffynetController.last_clock_high
-            IffynetController.last_clock_high = now
+        # TODO: Modify this function to test for start condition and then fill buffer with data until stop condition
+        #  is met. Seems to reliably read data at up to 100Hz.
 
-        print (f"Clock {'HIGH' if gpio.input(IffynetController.CLOCK) else 'LOW'}. Time since last HIGH: {IffynetController.clock_interval}s. "
-               f"Detected clock rate: {1/IffynetController.clock_interval:0.3f}Hz")
+        # if gpio.input(IffynetController.CLOCK) == gpio.HIGH:
+        #     now = time.time()
+        #     IffynetController.clock_interval = now - IffynetController.last_clock_high
+        #     IffynetController.last_clock_high = now
+        #
+        # print (f"Clock {'HIGH' if gpio.input(IffynetController.CLOCK) else 'LOW'}. Time since last HIGH: {IffynetController.clock_interval}s. "
+        #        f"Detected clock rate: {1/IffynetController.clock_interval:0.3f}Hz")
+
+        print(gpio.input(IffynetController.CLOCK), end="")
 
 
     @property
