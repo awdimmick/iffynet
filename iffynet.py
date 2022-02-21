@@ -1,6 +1,7 @@
 from threading import Thread
 import time
 import GPIO as gpio
+#import RPi.GPIO as gpio
 
 gpio.setmode(gpio.BCM)
 
@@ -55,4 +56,6 @@ class IffynetController():
             return self.__clock.rate
         else:
             return None
-    
+
+
+ifn = IffynetController(master=True)
