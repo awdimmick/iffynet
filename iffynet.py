@@ -4,6 +4,8 @@ import time, sys, signal
 
 def clean_up(sig, frame):
 
+    # TODO: This feels out of place, look for better location
+
     ifn.stop()
     gpio.cleanup()  # cleanup all GPIO
 
@@ -20,6 +22,7 @@ class Clock(Thread):
         self.__running = True
 
     def run(self):
+        # TODO: Look for nicer way to end the thread so that it's less messy
         try:
             while self.__running:
                 # Set clock pin low/high at regular interval
@@ -44,19 +47,42 @@ class Clock(Thread):
 
 
 class IffynetController():
+
+    # Declare constants for GPIO BCM pin numbers
+    CLOCK = 18
+    DATA_R = 23
+    DATA_W = 24
+    USE_R = 27
+    USE_W = 22
+
+
     def __init__(self, master=False, clock_rate=2):
 
         self.__master = master
         self.__clock = None
+        self.__running = True
 
         if master:
             # initialise clock
-            self.__clock = Clock(18, clock_rate)
+            self.__clock = Clock(IffynetController.CLOCK, clock_rate)
             self.__clock.start()
+        else:
+            # Need to put into slave state, syncing to clock and starting communications
+            gpio.setup(IffynetController.CLOCK, gpio.IN)
+            gpio.add_event_detect(IffynetController.CLOCK, gpio.RISING, callback=IffynetController.clock_respond)
+
 
     def stop(self):
-        self.__clock.stop()
-        time.sleep(self.__clock.interval)
+        if self.__clock:
+            self.__clock.stop()
+            time.sleep(self.__clock.interval)
+
+        self.__running = False
+
+    @staticmethod
+    def clock_respond(channel):
+        print (f"Clock {'HIGH' if gpio.input(IffynetController.CLOCK) else 'LOW'}")
+
 
     @property
     def master(self):
@@ -73,13 +99,9 @@ class IffynetController():
 if __name__ == "__main__":
     # Check arguments and adjust RPi library
     clock_rate = 2
-    master = False
+    master = True
 
     if len(sys.argv) > 1:
-        if "-pi" in sys.argv:
-            import RPi.GPIO as gpio
-        else:
-            import GPIO as gpio
 
         if "-clock" in sys.argv:
             i = sys.argv.index("-clock")
@@ -87,6 +109,12 @@ if __name__ == "__main__":
 
         if "-master" in sys.argv:
             master = True
+
+        if "-pi" in sys.argv:
+            import RPi.GPIO as gpio
+
+    else:
+        import GPIO as gpio
 
     gpio.setmode(gpio.BCM)
     signal.signal(signal.SIGINT, clean_up)

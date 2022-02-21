@@ -6,7 +6,8 @@ IN = 0
 OUT = 1
 HIGH = 1
 LOW = 0
-
+RISING = 1
+FALLING = 0
 
 def setmode(mode):
     if mode == BCM:
@@ -26,6 +27,11 @@ def input(pin, value=1):
 
 def output(pin, state):
     print(f"Setting value of pin {pin} to {'low' if state == LOW else 'high'}")
+
+
+def add_event_detect(pin, direction, callback):
+    print(f"Added threaded listener for {pin} on {'RISING' if direction == RISING else 'FALLING'} edge. Callback"
+          f"function: {callback}")
 
 
 def cleanup():
