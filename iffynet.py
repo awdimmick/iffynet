@@ -39,7 +39,7 @@ class IffynetController():
 
         if master:
             # initialise clock
-            self.__clock = Clock(clock_rate)
+            self.__clock = Clock(18, clock_rate)
             self.__clock.start()
 
     @property
