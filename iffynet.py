@@ -70,7 +70,7 @@ class IffynetController():
         else:
             # Need to put into slave state, syncing to clock and starting communications
             gpio.setup(IffynetController.CLOCK, gpio.IN)
-            gpio.add_event_detect(IffynetController.CLOCK, gpio.BOTH, callback=IffynetController.clock_respond)
+            gpio.add_event_detect(IffynetController.CLOCK, gpio.RISING, callback=IffynetController.clock_respond)
             signal.pause()
 
     def stop(self):
