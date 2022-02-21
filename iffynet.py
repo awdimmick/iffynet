@@ -69,9 +69,6 @@ class IffynetController():
         else:
             return None
 
-    @property
-    def clock_running(self):
-        return self.__clock.
 
 if __name__ == "__main__":
     # Check arguments and adjust RPi library
