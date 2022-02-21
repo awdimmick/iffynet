@@ -78,7 +78,7 @@ class IffynetController():
 
         self.__running = False
 
-    def clock_respond(self, channel):
+    def clock_respond(self):
         print (f"Clock {'HIGH' if gpio.input(IffynetController.CLOCK) else 'LOW'}")
 
 
