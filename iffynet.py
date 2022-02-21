@@ -88,7 +88,7 @@ class IffynetController():
             IffynetController.last_clock_high = now
 
         print (f"Clock {'HIGH' if gpio.input(IffynetController.CLOCK) else 'LOW'}. Time since last HIGH: {IffynetController.clock_interval}s. "
-               f"Detected clock rate: {1/IffynetController.clock_interval}Hz")
+               f"Detected clock rate: {1/IffynetController.clock_interval:0.3f}Hz")
 
 
     @property
