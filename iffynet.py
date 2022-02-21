@@ -19,12 +19,16 @@ class Clock(Thread):
         self.__running = True
 
     def run(self):
-        while self.__running:
-            # Set clock pin low/high at regular interval
-            gpio.output(self.__clock_pin, gpio.HIGH)
-            time.sleep(1/self.__rate)
-            gpio.output(self.__clock_pin, gpio.LOW)
-            time.sleep(1/self.__rate)
+        try:
+            while self.__running:
+                # Set clock pin low/high at regular interval
+                gpio.output(self.__clock_pin, gpio.HIGH)
+                time.sleep(1/self.__rate)
+                gpio.output(self.__clock_pin, gpio.LOW)
+                time.sleep(1/self.__rate)
+
+        finally:
+            pass
 
     def stop(self):
         self.__running = False
