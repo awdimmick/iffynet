@@ -28,3 +28,6 @@ def output(pin, state):
     print(f"Setting value of pin {pin} to {'low' if state == LOW else 'high'}")
 
 
+def cleanup():
+    print("Cleaning up all GPIO assignments.")
+

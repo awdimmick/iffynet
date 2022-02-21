@@ -1,5 +1,11 @@
 from threading import Thread
-import time, sys
+import time, sys, signal
+
+
+def clean_up():
+    ifn.stop()
+    gpio.cleanup()  # cleanup all GPIO
+    sys.exit(0)
 
 
 class Clock(Thread):
@@ -42,6 +48,9 @@ class IffynetController():
             self.__clock = Clock(18, clock_rate)
             self.__clock.start()
 
+    def stop(self):
+        self.__clock.stop()
+
     @property
     def master(self):
         return self.__master
@@ -73,5 +82,6 @@ if __name__ == "__main__":
             master = True
 
     gpio.setmode(gpio.BCM)
+    signal.signal(signal.SIGINT, clean_up)
 
     ifn = IffynetController(master=master, clock_rate=clock_rate)
