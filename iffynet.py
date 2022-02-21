@@ -1,7 +1,6 @@
 from threading import Thread
 import time, sys, signal
 
-
 def clean_up(sig, frame):
 
     # TODO: This feels out of place, look for better location
@@ -101,19 +100,17 @@ if __name__ == "__main__":
     clock_rate = 2
     master = False
 
-    if len(sys.argv) > 1:
+    if "-clock" in sys.argv:
+        i = sys.argv.index("-clock")
+        clock_rate = int(sys.argv[i + 1])
 
-        if "-clock" in sys.argv:
-            i = sys.argv.index("-clock")
-            clock_rate = int(sys.argv[i + 1])
+    if "-master" in sys.argv:
+        master = True
 
-        if "-master" in sys.argv:
-            master = True
-
-        if "-dev" in sys.argv:
-            import GPIO as gpio
-        else:
-            import RPi.GPIO as gpio
+    if "-dev" in sys.argv:
+        import GPIO as gpio
+    else:
+        import RPi.GPIO as gpio
 
 
     gpio.setmode(gpio.BCM)
