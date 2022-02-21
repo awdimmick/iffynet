@@ -1,15 +1,11 @@
 from threading import Thread
-import time
-import GPIO as gpio
-#import RPi.GPIO as gpio
-
-gpio.setmode(gpio.BCM)
+import time, sys
 
 
 class Clock(Thread):
 
     def __init__(self, gpio_clock_pin, clock_rate = 2):
-        Thread.__init__()
+        Thread.__init__(self)
         self.__clock_pin = gpio_clock_pin
         self.__rate = clock_rate
         gpio.setup(self.__clock_pin, gpio.OUT)
@@ -58,4 +54,14 @@ class IffynetController():
             return None
 
 
-ifn = IffynetController(master=True)
+if __name__ == "__main__":
+    # Check arguments and adjust RPi library
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "-pi":
+            import RPi.GPIO as gpio
+    else:
+        import GPIO as gpio
+
+    gpio.setmode(gpio.BCM)
+
+    ifn = IffynetController(master=True)
