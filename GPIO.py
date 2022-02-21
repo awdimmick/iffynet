@@ -30,7 +30,7 @@ def output(pin, state):
     print(f"Setting value of pin {pin} to {'low' if state == LOW else 'high'}")
 
 
-def add_event_detect(pin, direction, callback):
+def add_event_detect(pin, direction, callback, bouncetime):
     print(f"Added threaded listener for {pin} on {'RISING' if direction == RISING else 'FALLING'} edge. Callback"
           f"function: {callback}")
 
