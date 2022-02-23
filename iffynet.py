@@ -67,7 +67,7 @@ class IffynetController():
             # Send start condition by going from high to low whilst clock is high
             gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             gpio.output(IffynetController.DATA_W, GPIO.LOW)
-
+            gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             for bit in bits_to_transmit:
                 # Transmit each bit by setting the output pin to the low or high when the clock is low
                 gpio.wait_for_edge(IffynetController.CLOCK, gpio.FALLING)
@@ -88,8 +88,6 @@ class IffynetController():
         # Check for start condition, which is that the DATA_R pin should go from LOW to HIGH whilst the CLOCK pin is
         # HIGH
         if gpio.input(IffynetController.CLOCK) == gpio.HIGH:
-
-
 
             for i in range(8):
                 gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
