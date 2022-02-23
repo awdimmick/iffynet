@@ -95,11 +95,13 @@ class IffynetController():
 
     def receive_byte(self, channel):
 
-        if self.__transmitting: return
+        if self.__transmitting or self.__receiving: return
 
         received_bits = []
 
-        gpio.output(IffynetController.DATA_W, gpio.LOW)
+        self.__receiving = True
+
+        # gpio.output(IffynetController.DATA_W, gpio.LOW)
 
         # Check for start condition, which is that the DATA_R pin should go from LOW to HIGH whilst the CLOCK pin is
         # HIGH
@@ -109,6 +111,8 @@ class IffynetController():
             gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             received_bits.append(gpio.input(IffynetController.DATA_R))
             print(f"Received {gpio.input(IffynetController.DATA_R)}")
+
+        self.__receiving = False
 
         bit_string = ""
         for bit in received_bits:
