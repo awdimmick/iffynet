@@ -95,13 +95,16 @@ class IffynetController():
                 gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
                 received_bits.append(gpio.input(IffynetController.DATA_R))
 
-            print(f"Received bits: {received_bits}")
 
         bit_string = ""
         for bit in received_bits:
-            bit_string.append(bit)
+            bit_string += bit
 
-        return int(bit_string, 2)
+        i = int(bit_string, 2)
+
+        print(f"Received bits: {received_bits}, Value: {i} ({chr(i)}")
+
+        return i
 
     @staticmethod
     def determine_clock_rate():
