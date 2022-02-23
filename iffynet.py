@@ -100,11 +100,17 @@ class IffynetController():
         for bit in received_bits:
             bit_string += str(bit)
 
-        i = int(bit_string, 2)
+        try:
 
-        print(f"Received bits: {received_bits}, Value: {i} ({chr(i)}")
+            i = int(bit_string, 2)
 
-        return i
+            print(f"Received bits: {received_bits}, Value: {i} ({chr(i)}")
+
+            return i
+
+        except ValueError:
+            return None
+
 
     @staticmethod
     def determine_clock_rate():
