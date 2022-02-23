@@ -25,6 +25,8 @@ class IffynetController():
         self.__transmitting = False
         self.__receiving = False
 
+        gpio.setmode(gpio.BCM)
+
         gpio.setup(IffynetController.CLOCK, gpio.IN)
         gpio.setup(IffynetController.DATA_W, gpio.OUT)
         gpio.setup(IffynetController.DATA_R, gpio.IN)
@@ -33,7 +35,7 @@ class IffynetController():
 
         gpio.add_event_detect(IffynetController.DATA_R, gpio.FALLING, self.receive_byte)
 
-        signal.pause()  # Pause the main program, allowing the edge detection threads to continue running
+
 
     def stop(self):
         self.__running = False
@@ -156,8 +158,8 @@ if __name__ == "__main__":
     else:
         import RPi.GPIO as gpio
 
-    gpio.setmode(gpio.BCM)
     signal.signal(signal.SIGINT, clean_up)
 
     ifn = IffynetController()
+    signal.pause()  # Pause the main program, allowing the edge detection threads to continue running
     #ifn.transmit(b"Hello")
