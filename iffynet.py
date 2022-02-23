@@ -161,5 +161,8 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, clean_up)
 
     ifn = IffynetController()
+
+    if "-send" in sys.argv:
+        ifn.transmit(b"Hello!")
+
     signal.pause()  # Pause the main program, allowing the edge detection threads to continue running
-    #ifn.transmit(b"Hello")
