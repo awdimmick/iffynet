@@ -29,7 +29,7 @@ class IffynetController():
 
         gpio.setup(IffynetController.CLOCK, gpio.IN)
         gpio.setup(IffynetController.DATA_W, gpio.OUT)
-        gpio.setup(IffynetController.DATA_R, gpio.IN, pull_up_down=gpio.PUD_UP)
+        gpio.setup(IffynetController.DATA_R, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.setup(IffynetController.USE_W, gpio.OUT)
         gpio.setup(IffynetController.USE_R, gpio.IN, pull_up_down=gpio.PUD_DOWN)
 
@@ -80,6 +80,7 @@ class IffynetController():
                 # Transmit each bit by setting the output pin to the low or high when the clock is low
                 gpio.wait_for_edge(IffynetController.CLOCK, gpio.FALLING)
                 gpio.output(IffynetController.DATA_W, bit)
+                print(f"Transmitted {bit}")
 
 
 
@@ -105,7 +106,7 @@ class IffynetController():
         for i in range(8):
             gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             received_bits.append(gpio.input(IffynetController.DATA_R))
-
+            print(f"Received {gpio.input(IffynetController.DATA_R)}")
 
         bit_string = ""
         for bit in received_bits:
