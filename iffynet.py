@@ -97,8 +97,11 @@ class IffynetController():
 
             print(f"Received bits: {received_bits}")
 
-        received_bits = str(list(map(str, received_bits)))
-        return int(received_bits, 2)
+        bit_string = ""
+        for bit in received_bits:
+            bit_string.append(bit)
+
+        return int(bit_string, 2)
 
     @staticmethod
     def determine_clock_rate():
