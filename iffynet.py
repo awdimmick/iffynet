@@ -99,6 +99,8 @@ class IffynetController():
 
         received_bits = []
 
+        gpio.output(IffynetController.DATA_W, gpio.LOW)
+
         # Check for start condition, which is that the DATA_R pin should go from LOW to HIGH whilst the CLOCK pin is
         # HIGH
         # if gpio.input(IffynetController.CLOCK) == gpio.HIGH:
