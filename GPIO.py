@@ -10,6 +10,8 @@ LOW = 0
 RISING = 1
 FALLING = 0
 BOTH = 2
+PUD_DOWN = 1
+PUD_UP = 0
 
 def setmode(mode):
     if mode == BCM:
@@ -18,7 +20,7 @@ def setmode(mode):
         print("Mode set to BOARD numbers")
 
 
-def setup(pin, mode):
+def setup(pin, mode, pull_up_down=None):
     print(f"Set pin {pin} to {'input' if mode == IN else 'output'}")
 
 
