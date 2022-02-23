@@ -105,7 +105,7 @@ class IffynetController():
         # HIGH
         # if gpio.input(IffynetController.CLOCK) == gpio.HIGH:
 
-        while True: #for i in range(8):
+        for i in range(8):
             gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             received_bits.append(gpio.input(IffynetController.DATA_R))
             print(f"Received {gpio.input(IffynetController.DATA_R)}")
