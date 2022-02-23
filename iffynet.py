@@ -24,6 +24,8 @@ class IffynetController():
         self.__running = False
 
         gpio.setup(IffynetController.CLOCK, gpio.IN)
+        gpio.setup(IffynetController.DATA_W, gpio.OUT)
+        gpio.setup(IffynetController.DATA_R, gpio.IN)
 
         self.__clock_rate = IffynetController.determine_clock_rate()
 
@@ -31,6 +33,43 @@ class IffynetController():
 
     def stop(self):
         self.__running = False
+
+    @staticmethod
+    def byte_to_bits(byte):
+
+        if type(byte) != int:
+
+            i = int.from_bytes(byte)
+
+        else:
+            i = byte
+
+        bits = list(bin(i)[2:].zfill(8))
+
+        bits = map(int, bits)
+
+        return list(bits)
+
+    def transmit(self, data:bytearray):
+
+        for byte in data:
+            bits_to_transmit = self.byte_to_bits(byte)
+            print(f"{byte}: {bits_to_transmit}")
+
+            # Send start condition by going from high to low whilst clock is high
+            gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
+            gpio.output(IffynetController.DATA_W, GPIO.LOW)
+
+            for bit in bits_to_transmit:
+                # Transmit each bit by setting the output pin to the low or high when the clock is low
+                gpio.wait_for_edge(IffynetController.CLOCK, gpio.FALLING)
+                gpio.output(IffynetController.DATA_W, bit)
+
+            # Send stop condition
+            gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
+            gpio.output(IffynetController.DATA_W, GPIO.HIGH)
+
+
 
     @staticmethod
     def determine_clock_rate():
@@ -94,3 +133,4 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, clean_up)
 
     ifn = IffynetController()
+    ifn.transmit(b"Hello")

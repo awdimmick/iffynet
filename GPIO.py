@@ -38,7 +38,7 @@ def add_event_detect(pin, direction, callback, bouncetime):
 
 def wait_for_edge(pin, direction):
     print(f"Simulating waiting for {'RISING' if direction == RISING else 'FALLING'} edge on pin {pin}...")
-    time.sleep(1)
+    time.sleep(0.2)
 
 
 def cleanup():
