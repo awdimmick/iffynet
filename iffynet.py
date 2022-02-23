@@ -104,7 +104,7 @@ class IffynetController():
 
             i = int(bit_string, 2)
 
-            print(f"Received bits: {received_bits}, Value: {i} ({chr(i)}")
+            print(f"Received bits: {received_bits}, Value: {i} ({chr(i)})")
 
             return i
 
