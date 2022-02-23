@@ -29,20 +29,14 @@ class IffynetController():
         gpio.setmode(gpio.BCM)
 
         gpio.setup(IffynetController.CLOCK, gpio.IN)
-        gpio.setup(IffynetController.DATA_W, gpio.OUT)
-        gpio.setup(IffynetController.DATA_R, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.setup(IffynetController.DATA, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.setup(IffynetController.DATA, gpio.OUT)
-        gpio.setup(IffynetController.USE_W, gpio.OUT)
-        gpio.setup(IffynetController.USE_R, gpio.IN, pull_up_down=gpio.PUD_DOWN)
-
-        gpio.output(IffynetController.USE_W, gpio.LOW)
         gpio.output(IffynetController.DATA, gpio.LOW)
 
         #self.__clock_rate = IffynetController.determine_clock_rate()
 
-        # gpio.add_event_detect(IffynetController.DATA_R, gpio.FALLING, self.receive_byte)
-        gpio.add_event_detect(IffynetController.USE_R, gpio.RISING, self.receive_byte)
+        gpio.add_event_detect(IffynetController.DATA, gpio.RISING, self.receive_byte)
+
 
     def stop(self):
         self.__running = False
@@ -71,13 +65,9 @@ class IffynetController():
             bits_to_transmit = self.byte_to_bits(byte)
             print(f"{byte}: {bits_to_transmit}")
 
-            # # Send start condition by going from high to low whilst clock is high
-            # gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
-            # gpio.output(IffynetController.DATA_W, GPIO.LOW)
-
-            # Set in use pin to HIGH
-
-            gpio.output(IffynetController.USE_W, GPIO.HIGH)
+            # Send start condition by going from high to low whilst clock is high
+            gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
+            gpio.output(IffynetController.DATA_W, GPIO.HIGH)
 
             for bit in bits_to_transmit:
                 # Transmit each bit by setting the output pin to the low or high when the clock is low
@@ -85,35 +75,28 @@ class IffynetController():
                 gpio.output(IffynetController.DATA, bit)
                 print(f"Transmitted {bit}")
 
-
-
-            # # Send stop condition
-            # gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
-            # gpio.output(IffynetController.DATA_W, GPIO.HIGH)
-
+            # Send stop condition
+            gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             gpio.output(IffynetController.DATA, GPIO.LOW)
-            gpio.output(IffynetController.USE_W, GPIO.LOW)
 
         self.__transmitting = False
 
     def receive_byte(self, channel):
 
-        if self.__transmitting or self.__receiving: return
+        if self.__transmitting: return
 
         received_bits = []
 
-        self.__receiving = True
+        gpio.output(IffynetController.DATA, gpio.LOW)
 
-        # gpio.output(IffynetController.DATA_W, gpio.LOW)
-
-        # Check for start condition, which is that the DATA_R pin should go from LOW to HIGH whilst the CLOCK pin is
+        # Check for start condition, which is that the DATA_R pin should go from HIGH to LOW whilst the CLOCK pin is
         # HIGH
-        # if gpio.input(IffynetController.CLOCK) == gpio.HIGH:
+        if gpio.input(IffynetController.CLOCK) == gpio.HIGH:
 
-        for i in range(8):
-            gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
-            received_bits.append(gpio.input(IffynetController.DATA))
-            print(f"Received {gpio.input(IffynetController.DATA)}")
+            for i in range(8):
+                gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
+                received_bits.append(gpio.input(IffynetController.DATA))
+                print(f"Received {gpio.input(IffynetController.DATA)}")
 
         self.__receiving = False
 
