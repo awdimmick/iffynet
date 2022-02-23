@@ -15,6 +15,7 @@ class IffynetController():
     # Declare constants for GPIO BCM pin numbers
     CLOCK = 18
     DATA_R = 23
+    DATA = 23
     DATA_W = 24
     USE_R = 27
     USE_W = 22
@@ -30,6 +31,8 @@ class IffynetController():
         gpio.setup(IffynetController.CLOCK, gpio.IN)
         gpio.setup(IffynetController.DATA_W, gpio.OUT)
         gpio.setup(IffynetController.DATA_R, gpio.IN, pull_up_down=gpio.PUD_DOWN)
+        gpio.setup(IffynetController.DATA, gpio.IN, pull_up_down=gpio.PUD_DOWN)
+        gpio.setup(IffynetController.DATA, gpio.OUT, pull_up_down=gpio.PUD_DOWN)
         gpio.setup(IffynetController.USE_W, gpio.OUT)
         gpio.setup(IffynetController.USE_R, gpio.IN, pull_up_down=gpio.PUD_DOWN)
 
@@ -79,7 +82,7 @@ class IffynetController():
             for bit in bits_to_transmit:
                 # Transmit each bit by setting the output pin to the low or high when the clock is low
                 gpio.wait_for_edge(IffynetController.CLOCK, gpio.FALLING)
-                gpio.output(IffynetController.DATA_W, bit)
+                gpio.output(IffynetController.DATA, bit)
                 print(f"Transmitted {bit}")
 
 
@@ -88,7 +91,7 @@ class IffynetController():
             # gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             # gpio.output(IffynetController.DATA_W, GPIO.HIGH)
 
-            gpio.output(IffynetController.DATA_W, GPIO.LOW)
+            gpio.output(IffynetController.DATA, GPIO.LOW)
             gpio.output(IffynetController.USE_W, GPIO.LOW)
 
         self.__transmitting = False
@@ -109,8 +112,8 @@ class IffynetController():
 
         for i in range(8):
             gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
-            received_bits.append(gpio.input(IffynetController.DATA_R))
-            print(f"Received {gpio.input(IffynetController.DATA_R)}")
+            received_bits.append(gpio.input(IffynetController.DATA))
+            print(f"Received {gpio.input(IffynetController.DATA)}")
 
         self.__receiving = False
 
