@@ -27,7 +27,7 @@ class IffynetController():
 
         gpio.setmode(gpio.BCM)
 
-        gpio.setup(IffynetController.CLOCK, gpio.IN, pull_up_down=gpio.PUD_UP)
+        gpio.setup(IffynetController.CLOCK, gpio.IN)
         gpio.setup(IffynetController.DATA_W, gpio.OUT)
         gpio.setup(IffynetController.DATA_R, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.setup(IffynetController.USE_W, gpio.OUT)
@@ -105,7 +105,7 @@ class IffynetController():
         # HIGH
         # if gpio.input(IffynetController.CLOCK) == gpio.HIGH:
 
-        for i in range(8):
+        while True: #for i in range(8):
             gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             received_bits.append(gpio.input(IffynetController.DATA_R))
             print(f"Received {gpio.input(IffynetController.DATA_R)}")
