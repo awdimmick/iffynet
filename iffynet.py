@@ -67,6 +67,7 @@ class IffynetController():
             print(f"{byte}: {bits_to_transmit}")
 
             # Send start condition by going from high to low whilst clock is high
+            gpio.wait_for_edge(IffynetController.CLOCK, gpio.FALLING)
             gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             gpio.output(IffynetController.DATA, GPIO.HIGH)
 
