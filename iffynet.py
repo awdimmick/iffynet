@@ -22,12 +22,16 @@ class IffynetController():
     def __init__(self):
 
         self.__running = False
+        self.__transmitting = False
+        self.__receiving = False
 
         gpio.setup(IffynetController.CLOCK, gpio.IN)
         gpio.setup(IffynetController.DATA_W, gpio.OUT)
         gpio.setup(IffynetController.DATA_R, gpio.IN)
 
         self.__clock_rate = IffynetController.determine_clock_rate()
+
+        gpio.add_event_detect(IffynetController.DATA_R, gpio.FALLING, self.receive_byte)
 
         #signal.pause()  # Pause the main program, allowing the edge detection threads to continue running
 
@@ -52,6 +56,8 @@ class IffynetController():
 
     def transmit(self, data:bytearray):
 
+        self.__transmitting = True
+
         for byte in data:
             bits_to_transmit = self.byte_to_bits(byte)
             print(f"{byte}: {bits_to_transmit}")
@@ -69,7 +75,28 @@ class IffynetController():
             gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             gpio.output(IffynetController.DATA_W, GPIO.HIGH)
 
+        self.__transmitting = False
 
+    def receive_byte(self):
+
+        if self.__transmitting: return
+
+        received_bits = []
+
+        # Check for start condition, which is that the DATA_R pin should go from LOW to HIGH whilst the CLOCK pin is
+        # HIGH
+        if gpio.input(IffynetController.CLOCK) == gpio.HIGH:
+
+
+
+            for i in range(8):
+                gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
+                received_bits.append(gpio.input(IffynetController.DATA_R))
+
+            print(f"Received bits: {received_bits}")
+
+        received_bits = str(list(map(str, received_bits)))
+        return int(received_bits, 2)
 
     @staticmethod
     def determine_clock_rate():
@@ -133,4 +160,4 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, clean_up)
 
     ifn = IffynetController()
-    ifn.transmit(b"Hello")
+    #ifn.transmit(b"Hello")
