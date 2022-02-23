@@ -98,7 +98,7 @@ class IffynetController():
 
         bit_string = ""
         for bit in received_bits:
-            bit_string += bit
+            bit_string += str(bit)
 
         i = int(bit_string, 2)
 
