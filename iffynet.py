@@ -79,7 +79,7 @@ class IffynetController():
 
         self.__transmitting = False
 
-    def receive_byte(self):
+    def receive_byte(self, channel):
 
         if self.__transmitting: return
 
