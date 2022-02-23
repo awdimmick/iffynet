@@ -1,4 +1,5 @@
 # GPIO simulator
+import time
 
 BCM = 1
 BOARD = 2
@@ -33,6 +34,11 @@ def output(pin, state):
 def add_event_detect(pin, direction, callback, bouncetime):
     print(f"Added threaded listener for {pin} on {'RISING' if direction == RISING else 'FALLING'} edge. Callback"
           f"function: {callback}")
+
+
+def wait_for_edge(pin, direction):
+    print(f"Simulating waiting for {'RISING' if direction == RISING else 'FALLING'} edge on pin {pin}...")
+    time.sleep(1)
 
 
 def cleanup():
