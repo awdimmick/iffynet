@@ -27,7 +27,7 @@ class IffynetController():
 
         gpio.setmode(gpio.BCM)
 
-        gpio.setup(IffynetController.CLOCK, gpio.IN)
+        gpio.setup(IffynetController.CLOCK, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.setup(IffynetController.DATA_W, gpio.OUT)
         gpio.setup(IffynetController.DATA_R, gpio.IN, pull_up_down=gpio.PUD_UP)
         gpio.setup(IffynetController.USE_W, gpio.OUT)
