@@ -32,12 +32,12 @@ class IffynetController():
         gpio.setup(IffynetController.DATA_W, gpio.OUT)
         gpio.setup(IffynetController.DATA_R, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.setup(IffynetController.DATA, gpio.IN, pull_up_down=gpio.PUD_DOWN)
-        gpio.setup(IffynetController.DATA, gpio.OUT, pull_up_down=gpio.PUD_DOWN)
+        gpio.setup(IffynetController.DATA, gpio.OUT)
         gpio.setup(IffynetController.USE_W, gpio.OUT)
         gpio.setup(IffynetController.USE_R, gpio.IN, pull_up_down=gpio.PUD_DOWN)
 
         gpio.output(IffynetController.USE_W, gpio.LOW)
-        gpio.output(IffynetController.DATA_W, gpio.LOW)
+        gpio.output(IffynetController.DATA, gpio.LOW)
 
         #self.__clock_rate = IffynetController.determine_clock_rate()
 
