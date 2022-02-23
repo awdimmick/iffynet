@@ -39,7 +39,7 @@ class IffynetController():
         self.__clock_rate = IffynetController.determine_clock_rate()
 
         # gpio.add_event_detect(IffynetController.DATA_R, gpio.FALLING, self.receive_byte)
-        gpio.add_event_detect(IffynetController.USE_R, gpio.RISING, self.receive_byte)
+        gpio.add_event_detect(IffynetController.USE_R, gpio.RISING, self.receive_byte, bouncetime=100)
 
 
 
@@ -87,6 +87,7 @@ class IffynetController():
             # gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             # gpio.output(IffynetController.DATA_W, GPIO.HIGH)
 
+            gpio.output(IffynetController.DATA_W, GPIO.HIGH)
             gpio.output(IffynetController.USE_W, GPIO.LOW)
 
         self.__transmitting = False
@@ -101,9 +102,7 @@ class IffynetController():
         # HIGH
         # if gpio.input(IffynetController.CLOCK) == gpio.HIGH:
 
-        received_bits.append(gpio.input(IffynetController.DATA_R))
-
-        for i in range(7):
+        for i in range(8):
             gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             received_bits.append(gpio.input(IffynetController.DATA_R))
 
