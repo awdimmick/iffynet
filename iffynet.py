@@ -41,7 +41,7 @@ class IffynetController():
         print("Determining clock rate...")
 
         for i in range(10):
-            gpio.wait_for_edge(IffynetController.CLOCK, GPIO.RISING)
+            gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             high_times.append(time.time())
 
         for i in range(len(high_times) - 1):
