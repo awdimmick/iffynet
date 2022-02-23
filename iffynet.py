@@ -29,8 +29,9 @@ class IffynetController():
         gpio.setmode(gpio.BCM)
 
         gpio.setup(IffynetController.CLOCK, gpio.IN)
-        gpio.setup(IffynetController.DATA, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.setup(IffynetController.DATA, gpio.OUT)
+        gpio.setup(IffynetController.DATA, gpio.IN, pull_up_down=gpio.PUD_DOWN)
+
         gpio.output(IffynetController.DATA, gpio.LOW)
 
         #self.__clock_rate = IffynetController.determine_clock_rate()
