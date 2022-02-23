@@ -37,7 +37,7 @@ class IffynetController():
 
         #self.__clock_rate = IffynetController.determine_clock_rate()
 
-        #gpio.add_event_detect(IffynetController.DATA, gpio.RISING, self.receive_byte)
+        gpio.add_event_detect(IffynetController.DATA, gpio.RISING, self.receive_byte)
 
 
     def stop(self):
