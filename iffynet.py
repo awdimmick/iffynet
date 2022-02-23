@@ -33,7 +33,7 @@ class IffynetController():
 
         gpio.add_event_detect(IffynetController.DATA_R, gpio.FALLING, self.receive_byte)
 
-        #signal.pause()  # Pause the main program, allowing the edge detection threads to continue running
+        signal.pause()  # Pause the main program, allowing the edge detection threads to continue running
 
     def stop(self):
         self.__running = False
