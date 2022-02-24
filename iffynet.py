@@ -29,7 +29,7 @@ class IffynetController():
         gpio.setmode(gpio.BCM)
 
         gpio.setup(IffynetController.CLOCK, gpio.IN)
-        gpio.add_event_detect(IffynetController.CLOCK, gpio.BOTH, self.clock_rise_detected)
+        gpio.add_event_detect(IffynetController.CLOCK, gpio.BOTH, self.clock_edge_detected)
 
         gpio.setup(IffynetController.DATA, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.add_event_detect(IffynetController.DATA, gpio.RISING, self.receive_byte)
