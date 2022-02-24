@@ -30,7 +30,7 @@ class IffynetController():
 
         gpio.setup(IffynetController.CLOCK, gpio.IN)
         gpio.add_event_detect(IffynetController.CLOCK, gpio.RISING, self.clock_rise_detected)
-
+        gpio.add_event_detect(IffynetController.CLOCK, gpio.FALLING, self.clock_fall_detected)
 
         gpio.setup(IffynetController.DATA, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.add_event_detect(IffynetController.DATA, gpio.RISING, self.receive_byte)
@@ -161,6 +161,9 @@ class IffynetController():
 
     def clock_rise_detected(self, channel):
         print("CLOCK HIGH detected!")
+
+    def clock_fall_detected(self, channel):
+        print("CLOCK LOW detected!")
 
     @staticmethod
     def do_nothing(self):
