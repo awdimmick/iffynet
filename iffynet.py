@@ -29,6 +29,8 @@ class IffynetController():
         gpio.setmode(gpio.BCM)
 
         gpio.setup(IffynetController.CLOCK, gpio.IN)
+        gpio.add_event_detect(IffynetController.CLOCK, gpio.RISING, self.clock_rise_detected())
+
 
         gpio.setup(IffynetController.DATA, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.add_event_detect(IffynetController.DATA, gpio.RISING, self.receive_byte)
@@ -156,6 +158,9 @@ class IffynetController():
 
         print (f"Clock {'HIGH' if gpio.input(IffynetController.CLOCK) else 'LOW'}. Time since last HIGH: {IffynetController.clock_interval}s. "
                f"Detected clock rate: {1/IffynetController.clock_interval:0.3f}Hz")
+
+    def clock_rise_detected(self):
+        print("CLOCK HIGH detected!")
 
     @staticmethod
     def do_nothing(self):
