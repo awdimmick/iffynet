@@ -159,7 +159,7 @@ class IffynetController():
         print (f"Clock {'HIGH' if gpio.input(IffynetController.CLOCK) else 'LOW'}. Time since last HIGH: {IffynetController.clock_interval}s. "
                f"Detected clock rate: {1/IffynetController.clock_interval:0.3f}Hz")
 
-    def clock_rise_detected(self):
+    def clock_rise_detected(self, channel):
         print("CLOCK HIGH detected!")
 
     @staticmethod
