@@ -65,7 +65,7 @@ class IffynetController():
 
         if clock_master:
 
-            self.__clock = Clock(self.CLOCK, clock_rate)
+            self.__clock = Clock(clock_rate)
             self.__clock.start()
 
 
