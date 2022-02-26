@@ -67,8 +67,7 @@ class IffynetController():
             bits_to_transmit = self.byte_to_bits(byte)
             print(f"{byte}: {bits_to_transmit}")
 
-            # Send start condition by going from high to low whilst clock is high
-            gpio.wait_for_edge(IffynetController.CLOCK, gpio.FALLING)
+            # Send start condition by going from low to high whilst clock is high
             gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             gpio.output(IffynetController.DATA, GPIO.HIGH)
 
@@ -79,44 +78,48 @@ class IffynetController():
                 print(f"Transmitted {bit}")
 
             # Send stop condition
-            gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
+            gpio.wait_for_edge(IffynetController.CLOCK, gpio.FALLING)
             gpio.output(IffynetController.DATA, GPIO.LOW)
 
         self.__transmitting = False
 
     def receive_byte(self, channel):
 
-        if self.__transmitting: return
+        # This method is triggered on CLOCK HIGH
 
-        received_bits = []
+        if self.__transmitting or self.__receiving: return
 
         gpio.output(IffynetController.DATA, gpio.LOW)
 
-        # Check for start condition, which is that the DATA_R pin should go from HIGH to LOW whilst the CLOCK pin is
+        # Check for start condition, which is that the DATA pin should go from LOW to HIGH whilst the CLOCK pin is
         # HIGH
         if gpio.input(IffynetController.CLOCK) == gpio.HIGH:
+
+            self.__receiving = True
+
+            received_bits = []
 
             for i in range(8):
                 gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
                 received_bits.append(gpio.input(IffynetController.DATA))
                 print(f"Received {gpio.input(IffynetController.DATA)}")
 
-        self.__receiving = False
+            self.__receiving = False
 
-        bit_string = ""
-        for bit in received_bits:
-            bit_string += str(bit)
+            bit_string = ""
+            for bit in received_bits:
+                bit_string += str(bit)
 
-        try:
+            try:
 
-            i = int(bit_string, 2)
+                i = int(bit_string, 2)
 
-            print(f"Received bits: {received_bits}, Value: {i} ({chr(i)})")
+                print(f"Received bits: {received_bits}, Value: {i} ({chr(i)})")
 
-            return i
+                return i
 
-        except ValueError:
-            return None
+            except ValueError:
+                return None
 
 
     @staticmethod
