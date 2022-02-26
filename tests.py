@@ -174,5 +174,5 @@ if __name__ == "__main__":
             ifn.transmit([d])
 
     else:
-        gpio.add_event_detect(IffynetController.CLOCK, gpio.BOTH, ifn.clock_edge_detected)
+        gpio.add_event_detect(IffynetController.CLOCK, gpio.RISING, ifn.clock_edge_detected)
         signal.pause()
