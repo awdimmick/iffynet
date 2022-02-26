@@ -192,7 +192,11 @@ if __name__ == "__main__":
     ifn = IffynetController()
 
     if "-send" in sys.argv:
-        value_pos = sys.argv.index("-send") + 1
-        ifn.transmit([int(sys.argv[value_pos])])
+
+        while True:
+            d = int(input("Enter value to transmit\n> "))
+            if d == -1:
+                break
+            ifn.transmit([d])
 
     signal.pause()  # Pause the main program, allowing the edge detection threads to continue running
