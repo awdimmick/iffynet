@@ -20,7 +20,7 @@ class IffynetController():
     USE_R = 27
     USE_W = 22
 
-    def __init__(self, send=False):
+    def __init__(self):
 
         self.__running = False
         self.__transmitting = False
@@ -30,18 +30,12 @@ class IffynetController():
         gpio.setmode(gpio.BCM)
 
         gpio.setup(IffynetController.CLOCK, gpio.IN, pull_up_down=gpio.PUD_DOWN)
-        if not send:
-            gpio.add_event_detect(IffynetController.CLOCK, gpio.BOTH, self.clock_edge_detected)
+
+        # gpio.add_event_detect(IffynetController.CLOCK, gpio.BOTH, self.clock_edge_detected)
 
         gpio.setup(IffynetController.DATA, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.setup(IffynetController.DATA, gpio.OUT)
         gpio.output(IffynetController.DATA, gpio.LOW)
-
-        if send:
-            self.test_transmission_with_clock()
-
-        else:
-            signal.pause()  # Pause the main program, allowing the edge detection threads to continue running
 
         #self.__clock_rate = IffynetController.determine_clock_rate()
 
@@ -74,7 +68,6 @@ class IffynetController():
 
             # Send start condition by going from high to low whilst clock is high
             gpio.wait_for_edge(IffynetController.CLOCK, gpio.FALLING)
-            gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             gpio.output(IffynetController.DATA, GPIO.HIGH)
 
             for bit in bits_to_transmit:
@@ -171,10 +164,15 @@ if __name__ == "__main__":
     else:
         import RPi.GPIO as gpio
 
-    if "-send" in sys.argv:
-        send_test_transmission = True
-
     signal.signal(signal.SIGINT, clean_up)
 
-    ifn = IffynetController(send_test_transmission)
+    ifn = IffynetController()
 
+    if "-send" in sys.argv:
+        while True:
+            d = int(input("Enter value to transmit\n> "))
+            ifn.transmit(d)
+
+    else:
+        gpio.add_event_detect(IffynetController.CLOCK, gpio.BOTH, ifn.clock_edge_detected)
+        signal.pause()
