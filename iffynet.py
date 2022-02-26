@@ -12,9 +12,9 @@ def clean_up(sig, frame):
 
 class Clock(Thread):
 
-    def __init__(self, gpio_clock_pin, clock_rate = 2):
+    def __init__(self, clock_rate = 2):
         Thread.__init__(self)
-        self.__clock_pin = gpio_clock_pin
+        self.__clock_pin = 22
         self.__rate = clock_rate
         gpio.setup(self.__clock_pin, gpio.OUT)
         self.__running = False
@@ -63,17 +63,16 @@ class IffynetController():
 
         gpio.setmode(gpio.BCM)
 
-        gpio.setup(IffynetController.CLOCK, gpio.IN, pull_up_down=gpio.PUD_DOWN)
-
         if clock_master:
 
             self.__clock = Clock(self.CLOCK, clock_rate)
             self.__clock.start()
 
-        #gpio.add_event_detect(IffynetController.CLOCK, gpio.BOTH, self.clock_edge_detected)
 
+        gpio.setup(IffynetController.CLOCK, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.setup(IffynetController.DATA, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.add_event_detect(IffynetController.DATA, gpio.RISING, self.receive_byte)
+        # gpio.add_event_detect(IffynetController.CLOCK, gpio.BOTH, self.clock_edge_detected)
 
         gpio.setup(IffynetController.DATA, gpio.OUT)
         gpio.output(IffynetController.DATA, gpio.LOW)
