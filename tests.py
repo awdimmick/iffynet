@@ -157,6 +157,7 @@ class IffynetController():
         while True:
             gpio.wait_for_edge(self.CLOCK, gpio.FALLING)
             gpio.output(self.DATA, self.__current_data_value)
+            print(f"Clock LOW, sending {self.__current_data_value}")
             self.__current_data_value = not self.__current_data_value
 
 
