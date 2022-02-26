@@ -171,7 +171,7 @@ if __name__ == "__main__":
     if "-send" in sys.argv:
         while True:
             d = int(input("Enter value to transmit\n> "))
-            ifn.transmit(d)
+            ifn.transmit([d])
 
     else:
         gpio.add_event_detect(IffynetController.CLOCK, gpio.BOTH, ifn.clock_edge_detected)
