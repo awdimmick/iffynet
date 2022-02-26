@@ -89,6 +89,8 @@ class IffynetController():
 
         if self.__transmitting or self.__receiving: return
 
+        self.__receiving = True
+
         gpio.output(IffynetController.DATA, gpio.LOW)
 
         # Check for start condition, which is that the DATA pin should go from LOW to HIGH whilst the CLOCK pin is
