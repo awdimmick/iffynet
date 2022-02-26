@@ -68,8 +68,8 @@ class IffynetController():
             self.__clock = Clock(self.CLOCK, clock_rate)
             self.__clock.start()
 
-        else:
-            gpio.setup(IffynetController.CLOCK, gpio.IN)
+
+        gpio.setup(IffynetController.CLOCK, gpio.IN)
         #gpio.add_event_detect(IffynetController.CLOCK, gpio.BOTH, self.clock_edge_detected)
 
         gpio.setup(IffynetController.DATA, gpio.IN, pull_up_down=gpio.PUD_DOWN)
