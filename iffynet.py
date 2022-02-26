@@ -75,7 +75,7 @@ class IffynetController():
                 # Transmit each bit by setting the output pin to the low or high when the clock is low
                 gpio.wait_for_edge(IffynetController.CLOCK, gpio.FALLING)
                 gpio.output(IffynetController.DATA, bit)
-                print(f"Transmitted {bit}")
+                #print(f"Transmitted {bit}")
 
             # Send stop condition
             gpio.wait_for_edge(IffynetController.CLOCK, gpio.FALLING)
@@ -104,7 +104,7 @@ class IffynetController():
             for i in range(8):
                 gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
                 received_bits.append(gpio.input(IffynetController.DATA))
-                print(f"Received {gpio.input(IffynetController.DATA)}")
+                #print(f"Received {gpio.input(IffynetController.DATA)}")
 
             gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             self.__receiving = False
