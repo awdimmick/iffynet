@@ -68,7 +68,6 @@ class IffynetController():
             self.__clock = Clock(clock_rate)
             self.__clock.start()
 
-
         gpio.setup(IffynetController.CLOCK, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.setup(IffynetController.DATA, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         gpio.add_event_detect(IffynetController.DATA, gpio.RISING, self.receive_byte)
@@ -240,6 +239,7 @@ if __name__ == "__main__":
     if "-send" in sys.argv:
         while True:
             message = input("Enter a message to send\n> ")
+            if message == "": break
             ifn.transmit(message.encode())
 
     signal.pause()  # Pause the main program, allowing the edge detection threads to continue running
