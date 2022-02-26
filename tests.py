@@ -155,7 +155,7 @@ class IffynetController():
     def test_transmission_with_clock(self):
 
         while True:
-            gpio.wait_for_edge(self.CLOCK, gpio.LOW)
+            gpio.wait_for_edge(self.CLOCK, gpio.FALLING)
             gpio.output(self.DATA, self.__current_data_value)
             self.__current_data_value = not self.__current_data_value
 
