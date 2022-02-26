@@ -66,7 +66,7 @@ class IffynetController():
         if clock_master:
 
             self.__clock = Clock(self.CLOCK, clock_rate)
-            self.__clock.run()
+            self.__clock.start()
 
         else:
             gpio.setup(IffynetController.CLOCK, gpio.IN)
