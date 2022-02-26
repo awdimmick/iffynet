@@ -10,6 +10,41 @@ def clean_up(sig, frame):
     print("Finished.")
 
 
+class Clock(Thread):
+
+    def __init__(self, gpio_clock_pin, clock_rate = 2):
+        Thread.__init__(self)
+        self.__clock_pin = gpio_clock_pin
+        self.__rate = clock_rate
+        gpio.setup(self.__clock_pin, gpio.OUT)
+        self.__running = False
+
+    def run(self):
+        # TODO: Look for nicer way to end the thread so that it's less messy
+        self.__running = True
+        try:
+            while self.__running:
+                # Set clock pin low/high at regular interval
+                gpio.output(self.__clock_pin, gpio.HIGH)
+                time.sleep(1/(self.__rate * 2))
+                gpio.output(self.__clock_pin, gpio.LOW)
+                time.sleep(1/(self.__rate * 2))
+
+        finally:
+            pass
+
+    def stop(self):
+        self.__running = False
+
+    @property
+    def rate(self):
+        return self.__rate
+
+    @property
+    def interval(self):
+        return 1 / self.__rate
+
+
 class IffynetController():
 
     # Declare constants for GPIO BCM pin numbers
@@ -20,7 +55,7 @@ class IffynetController():
     USE_R = 27
     USE_W = 22
 
-    def __init__(self):
+    def __init__(self, clock_master=False, clock_rate=10):
 
         self.__running = False
         self.__transmitting = False
@@ -28,7 +63,13 @@ class IffynetController():
 
         gpio.setmode(gpio.BCM)
 
-        gpio.setup(IffynetController.CLOCK, gpio.IN)
+        if clock_master:
+
+            self.__clock = Clock(self.CLOCK, clock_rate)
+            self.__clock.run()
+
+        else:
+            gpio.setup(IffynetController.CLOCK, gpio.IN)
         #gpio.add_event_detect(IffynetController.CLOCK, gpio.BOTH, self.clock_edge_detected)
 
         gpio.setup(IffynetController.DATA, gpio.IN, pull_up_down=gpio.PUD_DOWN)
@@ -179,20 +220,23 @@ class IffynetController():
         self.__clock_high_detection_times.append(time.time())
 
 
-
-
-
 if __name__ == "__main__":
-    # Check arguments and adjust RPi library
+
+    clock_master = False
+    clock_rate = None
 
     if "-dev" in sys.argv:
         import GPIO as gpio
     else:
         import RPi.GPIO as gpio
 
+    if "-clock" in sys.argv:
+        clock_interval = int(sys.argv[sys.argv.index("-clock") + 1])
+        clock_master = True
+
     signal.signal(signal.SIGINT, clean_up)
 
-    ifn = IffynetController()
+    ifn = IffynetController(clock_master=clock_master, clock_rate=clock_rate)
 
     if "-send" in sys.argv:
         while True:
