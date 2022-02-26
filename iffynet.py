@@ -104,6 +104,7 @@ class IffynetController():
                 received_bits.append(gpio.input(IffynetController.DATA))
                 print(f"Received {gpio.input(IffynetController.DATA)}")
 
+            gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
             self.__receiving = False
 
             bit_string = ""
