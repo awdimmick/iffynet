@@ -1,8 +1,10 @@
+# TODO: Change "receieve byte" to "receive message" that keeps on reading bytes until stop signal is received. Bytes
+#  get added to a byte buffer/string and then output once they are all received.
+
 from threading import Thread
 import time, sys, signal, math
 
 import GPIO
-
 
 def clean_up(sig, frame):
 
@@ -12,7 +14,7 @@ def clean_up(sig, frame):
 
 class Clock(Thread):
 
-    def __init__(self, clock_rate = 2):
+    def __init__(self, clock_rate=100):
         Thread.__init__(self)
         self.__clock_pin = 22
         self.__rate = clock_rate
@@ -20,7 +22,7 @@ class Clock(Thread):
         self.__running = False
 
     def run(self):
-        # TODO: Look for nicer way to end the thread so that it's less messy
+
         self.__running = True
         try:
             while self.__running:
@@ -128,8 +130,6 @@ class IffynetController():
 
         if self.__transmitting or self.__receiving: return
 
-        self.__receiving = True
-
         gpio.output(IffynetController.DATA, gpio.LOW)
 
         # Check for start condition, which is that the DATA pin should go from LOW to HIGH whilst the CLOCK pin is
@@ -146,11 +146,12 @@ class IffynetController():
                 #print(f"Received {gpio.input(IffynetController.DATA)}")
 
             gpio.wait_for_edge(IffynetController.CLOCK, gpio.RISING)
-            self.__receiving = False
 
             bit_string = ""
             for bit in received_bits:
                 bit_string += str(bit)
+
+            self.__receiving = False
 
             try:
 
@@ -158,11 +159,12 @@ class IffynetController():
 
                 print(f"Received bits: {received_bits}, Value: {i} ({chr(i)})")
 
+
                 return i
 
             except ValueError:
-                return None
 
+                return None
 
     @staticmethod
     def determine_clock_rate():
@@ -188,34 +190,6 @@ class IffynetController():
         print(f"Clock rate detected: {clock_rate:0.3f}Hz (variance {variance * 100:0.2f}%)")
 
         return clock_rate
-
-
-    @staticmethod
-    def clock_respond(channel):
-        # TODO: Modify this function to test for start condition and then fill buffer with data until stop condition
-        #  is met. Seems to reliably read data at up to 100Hz.
-
-        if gpio.input(IffynetController.CLOCK) == gpio.HIGH:
-            now = time.time()
-            IffynetController.clock_interval = now - IffynetController.last_clock_high
-            IffynetController.last_clock_high = now
-
-        print (f"Clock {'HIGH' if gpio.input(IffynetController.CLOCK) else 'LOW'}. Time since last HIGH: {IffynetController.clock_interval}s. "
-               f"Detected clock rate: {1/IffynetController.clock_interval:0.3f}Hz")
-
-    def clock_edge_detected(self, channel):
-        if gpio.input(IffynetController.CLOCK) == 1:
-            print("CLOCK HIGH detected!")
-        else:
-            print("CLOCK LOW detected!")
-
-
-    @staticmethod
-    def do_nothing(self):
-        pass
-
-    def detect_clock_rise(self):
-        self.__clock_high_detection_times.append(time.time())
 
 
 if __name__ == "__main__":
