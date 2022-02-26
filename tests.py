@@ -152,7 +152,7 @@ class IffynetController():
         data_value = gpio.input(self.DATA)
         print(f"Clock {'HIGH' if gpio.input(self.CLOCK) else 'LOW'}. Data line value: {data_value}")
 
-    def test_transmission_with_clock(self, channel):
+    def test_transmission_with_clock(self):
 
         while True:
             gpio.wait_for_edge(self.CLOCK, gpio.LOW)
