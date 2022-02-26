@@ -231,7 +231,7 @@ if __name__ == "__main__":
         import RPi.GPIO as gpio
 
     if "-clock" in sys.argv:
-        clock_interval = int(sys.argv[sys.argv.index("-clock") + 1])
+        clock_rate = int(sys.argv[sys.argv.index("-clock") + 1])
         clock_master = True
 
     signal.signal(signal.SIGINT, clean_up)
